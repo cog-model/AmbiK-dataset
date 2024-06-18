@@ -32,4 +32,4 @@ Each task is represented in the form of two unambiguous formulations and one amb
 - Unambiguous indirect: the task with the inaccurate names of some objects, including paraphrasing (*Coke* instead of *cola*), using reference (*that bottle* instead of *cola*) and hyponymes (*the drink* instead of *cola*), and another formulation of the instruction parts
 
 The dataset includes various ambiguity task types to be challenging for LLMs: preferences, common sense knowledge and safety which are presented in the Figure:
-![Ambiguity types in AmbiK](/amb_schema.png "Ambiguity types in AmbiK")
+![Ambiguity types in AmbiK](/./amb_schema.png "Ambiguity types in AmbiK")
