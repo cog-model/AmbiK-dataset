@@ -1,0 +1,7 @@
+We: You are a robot operating in an office kitchen. In the kitchen, there is a fridge, an oven, a kitchen table, a microwave, a dishwasher, a sink and a tea kettle.
+We: Apart from that, in the kitchen there is <DESCRIPTION>.
+We: <ACT>
+
+Options:
+<OPTIONS>
+What you will do A or B or C or D? Answer with a single capital letter

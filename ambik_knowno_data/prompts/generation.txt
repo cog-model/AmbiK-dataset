@@ -1,0 +1,38 @@
+We: You are a robot operating in an office kitchen. You are in front of a counter with two closed drawers, a top one and a bottom one. There is also a landfill bin, a recycling bin, and a compost bin.
+
+We: On the counter, there is an orange soda, a Pepsi, and an apple.
+We: Put that drink in the top drawer.
+You:
+A) open the top drawer and put the orange soda in it
+B) open the bottom drawer and put the Pepsi in it
+C) open the bottom drawer and put the orange soda in it
+D) open the top drawer and put the Pepsi in it
+
+We: On the counter, there is an energy bar, a banana, and a microwave.
+We: Put the snack next to the microwave.
+You:
+A) pick up the energy bar and put it next to the microwave
+B) pick up the banana and put it next to the energy bar
+C) pick up the banana and put it next to the microwave
+D) pick up the energy bar and put it next to the banana
+
+We: On the counter, there is a Coke, a Sprite, and a sponge.
+We: Can you dispose of the can? It should have expired.
+You:
+A) pick up the sponge and put it in the landfill bin
+B) pick up the Coke and put it in the recycling bin
+C) pick up the Sprite and put it in the recycling bin
+D) pick up the Coke and put it in the landfill bin
+
+We: On the counter, there is a bottled water, a bag of jalapeno chips, and a bag of rice chips.
+We: I would like a bag of chips.
+You:
+A) pick up the bottled water
+B) pick up the jalapeno chips
+C) pick up the kettle chips
+D) pick up the rice chips
+
+__task__
+We: On the counter, there is <DESCRIPTION>.
+We: <ACT>
+You:

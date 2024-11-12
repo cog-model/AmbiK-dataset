@@ -1,0 +1,14 @@
+experiment: 
+    examples_generation:
+        model: "gpt-4-turbo"
+        generation_kwargs:
+            max_tokens: 256
+            stop: ['We:']
+            logprobs: False
+            logit_bias: {}
+        #model: "NousResearch/Llama-2-7b-chat-hf"
+        #"google/gemma-7b"
+        #generation_kwargs:
+        #    num_beams: 4
+        #    max_new_tokens: 250
+        #    num_return_sequences: 1

@@ -1,0 +1,7 @@
+We: You are a robot operating in an office kitchen. You are in front of a counter with two closed drawers, a top one and a bottom one. There is also a landfill bin, a recycling bin, and a compost bin.
+We: Apart from that, in the kitchen there is <DESCRIPTION>.
+We: <TASK>
+
+Options:
+<OPTIONS>
+What you will do A or B or C or D? Answer with a single capital letter

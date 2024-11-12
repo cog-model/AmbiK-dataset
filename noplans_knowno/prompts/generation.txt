@@ -1,0 +1,30 @@
+We: You are a robot operating in an office kitchen. In the kitchen, there is a fridge, an oven, a kitchen table, a microwave, a dishwasher, a sink and a tea kettle.
+
+We: Apart from that, in the kitchen there is a frying pan, a grill pan, a sauce pan, a vegetable peeler, a potato masher, canned olives, a greek yogurt cup, a vanilla yogurt cup, a strawberry yogurt cup, cream cheese, cheddar cheese slices, mozarella sticks and cottage cheese.
+We: Take a package of cheese from the fridge.
+You:
+A) pick up the greek yogurt cup from the fridge
+B) pick up cheddar cheese slices from the fridge
+C) pick up cottage cheese from the fridge
+D) pick up cream cheese from the fridge
+
+We: Apart from that, in the kitchen there is paper towels, a bottle opener, frozen mushroom pizza, frozen vegetable pizza, frozen pepperoni pizza, ginger biscuits, digestive biscuits, crackers, chocolate teacakes, honey, a vanilla yogurt cup and a greek yogurt cup.
+We: Open the bottle of honey.
+You:
+A) use the bottle opener to open the bottle of honey
+B) use paper towels to open the bottle of honey
+C) open the bottle of honey without any tools
+D) use crackers to open the bottle of honey
+
+We: Apart from that, in the kitchen there is a bread knife, a paring knife, a butter knife, a cutting board, a vegetable peeler, a potato masher, a plastic food storage container, a glass food storage container, a lemon, a banana, grapes, an apple, an orange, a peach, canned olives and a peeler.
+We: Take the lemon from the kitchen table.
+You:
+A) pick up the banana from the kitchen table
+B) pick up the lemon from the kitchen table
+C) pick up canned olives from the kitchen table
+D) pick up glass food storage container from the kitchen table
+
+__task__
+We: Apart from that, in the kitchen there is <DESCRIPTION>.
+We: <ACT>
+You: 

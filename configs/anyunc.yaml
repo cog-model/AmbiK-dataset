@@ -1,0 +1,16 @@
+experiment: 
+    examples_generation:
+        model: "google/gemma-7b"
+        generation_kwargs:
+            num_beams: 4
+            max_new_tokens: 250
+            num_return_sequences: 1
+
+    answering:
+        model: "google/flan-t5-base"
+        #"google/flan-t5-base"
+        generation_kwargs:
+            num_beams: 4
+            max_new_tokens: 250
+            num_return_sequences: 1
+    

@@ -1,0 +1,31 @@
+experiment: 
+    examples_generation:
+        model: "gpt-3.5-turbo"
+        #"NousResearch/Llama-2-7b-chat-hf"
+        #"google/gemma-7b"
+        generation_kwargs:
+            max_tokens: 256
+            stop: ['We:']
+            logprobs: False
+            logit_bias: {}
+            #num_beams: 4
+            #max_new_tokens: 250
+            #num_return_sequences: 1
+
+    answering:
+        model: "gpt3.5-turbo"
+        #"NousResearch/Llama-2-7b-chat-hf"
+        #"google/flan-t5-base"
+        generation_kwargs:
+            max_tokens: 1
+            logprobs: True
+            top_logprobs: 5
+            stop: None
+            logit_bias: {317: 100.0,   #  A (with space at front)
+                        347: 100.0,   #  B (with space at front)
+                        327: 100.0,   #  C (with space at front)
+                        360: 100.0,   #  D (with space at front)
+                        412: 100.0,  }
+            #num_beams: 4
+            #max_new_tokens: 250
+            #num_return_sequences: 1

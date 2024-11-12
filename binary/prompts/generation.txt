@@ -1,0 +1,31 @@
+We: You are a robot operating in an office kitchen. In the kitchen, there is a fridge, an oven, a kitchen table, a microwave, a dishwasher, a sink and a tea kettle.
+
+We: Apart from that, in the kitchen there is a frying pan, a grill pan, a sauce pan, a vegetable peeler, a potato masher, canned olives, a greek yogurt cup, a vanilla yogurt cup, a strawberry yogurt cup, cream cheese, cheddar cheese slices, mozarella sticks and cottage cheese.
+We: You have received the task “Prepare a Cheesy Greek Yogurt Dip.” You created a plan to compete the task. Your previous actions were:
+1. Take a bowl from the kitchen table.
+2. Take a Greek yogurt cup from the fridge.
+3. Pour the Greek yogurt into the bowl.
+Your next action is:
+4. Take a package of cheese from the fridge.
+You: I will pick up cheddar cheese slices from the fridge.
+
+We: Apart from that, in the kitchen there is paper towels, a bottle opener, frozen mushroom pizza, frozen vegetable pizza, frozen pepperoni pizza, ginger biscuits, digestive biscuits, crackers, chocolate teacakes, honey, a vanilla yogurt cup and a greek yogurt cup.
+We: You have received the task “Add honey to vanilla yogurt.” You created a plan to compete the task. Your previous actions were:
+You:
+1. Take the bottle of honey from the kitchen table.
+2. Place the bottle of honey on the kitchen table.
+Your next action is:
+3. Open the bottle of honey.
+You: I will open the bottle of honey without any tools.
+
+We: Apart from that, in the kitchen there is a bread knife, a paring knife, a butter knife, a cutting board, a vegetable peeler, a potato masher, a plastic food storage container, a glass food storage container, a lemon, a banana, grapes, an apple, an orange, a peach, canned olives and a peeler.
+We: You have received the task “Kitchen Robot, please use the vegetable peeler to peel the skin off the lemon in one continuous spiral, creating a lemon peel garnish for a cocktail or dessert.” You created a plan to compete the task. Your first action is:
+1. Take the lemon from the kitchen table.
+You: I will pick up the lemon from the kitchen table.
+
+__task__
+We: Apart from that, in the kitchen there is <DESCRIPTION>.
+We: You have received the task “<TASK>“ You created a plan to compete the task. <PREFIX>
+Your next action is:
+<ACT>
+You: I will 

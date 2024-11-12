@@ -1,0 +1,20 @@
+experiment: 
+    examples_generation:
+        model: "gpt-4-turbo"
+        #"NousResearch/Llama-2-7b-chat-hf"
+        #"google/gemma-7b"
+        generation_kwargs:
+            max_tokens: 256
+            stop: ['We:']
+            logprobs: False
+            logit_bias: {}
+    
+    uncertainty_detection:
+        model: "gpt-4-turbo"
+        #"NousResearch/Llama-2-7b-chat-hf"
+        #"google/flan-t5-base"
+        generation_kwargs:
+            max_tokens: 1
+            logprobs: False
+            stop: None
+            logit_bias: {}

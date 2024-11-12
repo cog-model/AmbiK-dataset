@@ -1,0 +1,1 @@
+examples_generation = "\n".join(open("lofree/prompts/generation.txt").readlines())
