@@ -42,6 +42,7 @@ The dataset includes various ambiguity task types to be challenging for LLMs: pr
 - folder `configs` contains .yaml files, which should be edited for changing used LLMs and their parameters
 - folder `utils` contains code for metrics calculations and LLM launching
 - folders `knowno`, `lofree`, `LAP`, `binary`, `nohelp` contain code for running experiments of KnowNo, LofreeCP, LAP, Binary and NoHelp methods, correspondingly
+- file `requirements.txt` with Python libraries versions used in experiments
 
 ##  Instructions for running experiments on the AmbiK dataset
 1. If you plan to test LofreeCP method, download the `en_core_web_md` model: `python -m spacy download en_core_web_md`
