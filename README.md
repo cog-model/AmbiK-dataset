@@ -46,5 +46,5 @@ The dataset includes various ambiguity task types to be challenging for LLMs: pr
 1. If you plan to test LofreeCP method, download the `en_core_web_md` model: `python -m spacy download en_core_web_md`
 2. Navigate to the root folder
 3. For KnowNo, LofreeCP or LAP, run a script in the format `python3 <experiment folder: knowno/lofree/LAP>/calibrate.py`, for example,`python3 knowno/calibrate.py` for KnowNo. This script will perform calibration on 100 examples and output the conformal prediction value. Unsert the conformal prediction value into the code of `pipeline.py` in the experiment folder.
-5. For any experiment, run a script in the format `python3 <experiment folder:| \verb|knowno/lofree>/pipeline.py`. This script performs testing. Results (detailed intermediate and aggregated) will be saved in a new folder named `<CP value>_<LLM1>_<LLM2>` as .csv tables.
+5. For any experiment, run a script in the format `python3 <experiment folder: knowno/lofree>/pipeline.py`. This script performs testing. Results (detailed intermediate and aggregated) will be saved in a new folder named `<CP value>_<LLM1>_<LLM2>` as .csv tables.
 
