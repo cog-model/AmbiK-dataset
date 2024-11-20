@@ -4,7 +4,7 @@ The use of Large Language Models (LLMs), which demonstrate impressive capabiliti
 
 The dataset includes various ambiguity task types to be challenging for LLMs: Preferences, Common Sense Knowledge and Safety which are presented in the Figure:
 
-<img src="amb_schema_final.png">
+<img src="amb_schema_final.png" width="250">
 
 ## AmbiK structure
 AmbiK comprises 500 pairs of ambiguous tasks and their unambiguous counterparts, categorized by ambiguity type (human preference, common sense knowledge, safety), with environment descriptions, clarifying questions and answers, and task plans. The full structure of the dataset with examples is presented in the table below.
