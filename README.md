@@ -36,3 +36,8 @@ Each task is represented in the form of two unambiguous formulations and one amb
 The dataset includes various ambiguity task types to be challenging for LLMs: preferences, common sense knowledge and safety which are presented in the Figure:
 <img src="ambik_types_examples.png">
 
+# Repository structure:
+- folder `ambik\_dataset` contains .csv files with AmbiK data, `ambik_calibrate_100.csv` is calibration data, `ambik_test_400.csv` is data for testing ambiguity detection methods
+- folder `configs` contains .yaml files, which should be edited for changing used LLMs and their parameters
+- folder `utils` contains code for metrics calculations and LLM launching
+- folders `knowno`, `lofree`, `LAP`, `binary`, `nohelp` contain code for running experiments of KnowNo, LofreeCP, LAP, Binary and NoHelp methods, correspondingly
