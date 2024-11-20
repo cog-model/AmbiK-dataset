@@ -6,7 +6,7 @@ The dataset includes various ambiguity task types to be challenging for LLMs: Pr
 
 <img src="amb_schema_final.png">
 
-# AmbiK structure
+## AmbiK structure
 AmbiK comprises 500 pairs of ambiguous tasks and their unambiguous counterparts, categorized by ambiguity type (human preference, common sense knowledge, safety), with environment descriptions, clarifying questions and answers, and task plans. The full structure of the dataset with examples is presented in the table below.
 
  AmbiK lable                        | Description                                                                                    | Example                                                                                                                                                                                                                                                                                                         
@@ -36,7 +36,7 @@ Each task is represented in the form of two unambiguous formulations and one amb
 The dataset includes various ambiguity task types to be challenging for LLMs: preferences, common sense knowledge and safety which are presented in the Figure:
 <img src="ambik_types_examples.png">
 
-# Repository structure:
+## Repository structure:
 - folder `ambik\_dataset` contains .csv files with AmbiK data, `ambik_calibrate_100.csv` is calibration data, `ambik_test_400.csv` is data for testing ambiguity detection methods
 - folder `configs` contains .yaml files, which should be edited for changing used LLMs and their parameters
 - folder `utils` contains code for metrics calculations and LLM launching
