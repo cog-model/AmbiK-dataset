@@ -6,8 +6,6 @@ import random
 import numpy as np
 import pandas as pd
 import re
-import spacy
-import re
 import tqdm
 
 #print(glob.glob("*"))
@@ -240,7 +238,7 @@ if __name__ == "__main__":
     option_prompts = []
                                   
     tasks_for_ans = []
-    for i in range(len(dataset)): #len(dataset) 
+    for i in range(3): #len(dataset) 
         description = dataset.loc[i, 'environment_full']
         task = dataset.loc[i, 'task']
         plan = dataset.loc[i, 'plan'].split('\n')

@@ -95,8 +95,9 @@ def calibration():
 
     calibration_data = []
     
-    calib_data = pd.DataFrame(columns=['id', 'task', 'all variants', 'right variants'])
-    for i in range(len(dataset)): #len(dataset)
+    #calib data датасет и файл для сохранения результатов калибровки (обычно не нужен)
+    #calib_data = pd.DataFrame(columns=['id', 'task', 'all variants', 'right variants'])
+    for i in range(len(dataset)):
         description = dataset.loc[i, 'environment_full']
         if dataset.loc[i, 'take_amb'] == 1:
             plan = dataset.loc[i, 'plan_for_amb_task'].split('\n')
@@ -135,11 +136,11 @@ def calibration():
                'right variants': ", ".join(variants),
                'filtered variants': ", ".join(filtered_options.values()), 
                'success_logits': ', '.join(str(x) for x in success_logits)}
-        calib_data = pd.concat([calib_data, pd.DataFrame([row])], ignore_index=True)
+        #calib_data = pd.concat([calib_data, pd.DataFrame([row])], ignore_index=True)
         
     model = configs['examples_generation']['model']
     model = model.split('/')[-1]
-    calib_data.to_csv('calib_data/knowno_' + model +'.csv')
+    #calib_data.to_csv('calib_data/knowno_' + model +'.csv')
             
 
     num_calibration_data = len(calibration_data)
