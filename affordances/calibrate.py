@@ -1,13 +1,8 @@
 import gc
 import sys
 import glob
-import math
-from scipy import spatial
 import numpy as np
 import pandas as pd
-import random
-import os
-import spacy
 import re
 
 print(glob.glob("*"))
@@ -139,7 +134,7 @@ def calibration():
                'right variants': ", ".join(variants),
                'filtered variants': ", ".join(filtered_options.values()), 
                'success_logits': ', '.join(str(x) for x in success_logits)}
-        calib_data = pd.concat([calib_data, pd.DataFrame([row])], ignore_index=True)
+        #calib_data = pd.concat([calib_data, pd.DataFrame([row])], ignore_index=True) Neede if one wants to save calibration data
 
     gen_model = configs['examples_generation']['model']
     if "/" in gen_model:
@@ -147,7 +142,7 @@ def calibration():
     answ_model = configs['answering']['model']
     if "/" in answ_model:
         answ_model = answ_model.split("/")[1]
-    calib_data.to_csv('calib_data/LAP_' + gen_model + '_' + answ_model +'.csv')
+    #calib_data.to_csv('calib_data/LAP_' + gen_model + '_' + answ_model +'.csv')
         
     num_calibration_data = len(calibration_data)
     q_level = np.ceil((num_calibration_data + 1) * (1 - epsilon)) / num_calibration_data

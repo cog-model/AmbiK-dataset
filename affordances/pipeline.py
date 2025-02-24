@@ -1,11 +1,7 @@
 import gc
 import sys
-import glob
-import math
-from scipy import spatial
 import numpy as np
 import pandas as pd
-import random
 import os
 import re
 
@@ -165,7 +161,7 @@ class AffordancesPipe():
             context_scores[li[j]] = context_score
 
             if li[j] in sample['logits'].keys():
-                affordance_score = promt_score * context_score * np.exp(sample['logits'][li[j]])
+                affordance_score = float(promt_score * context_score * np.exp(sample['logits'][li[j]]))
             else:
                 affordance_score = 0
             #('promt_score', promt_score)
@@ -194,7 +190,7 @@ class AffordancesPipe():
         context_scores, promt_scores, affordance_scores = self.generate_affordances(sample)
                                                                                     #, description, task, environment_objects)
         sample['affordance_scores'] = affordance_scores
-        print('affordance_scores', affordance_scores)
+        #print('affordance_scores', affordance_scores)
         
         #filtered_logits = llm.filter_logits(logits[-1][0], words=["A", "B", "C", "D", 'a', 'b', 'c', 'd', '1', '2', '3', '4'])
         #llm = None
@@ -271,13 +267,13 @@ if __name__ == "__main__":
             'prefix':prefix,
             'action': action})
         
-    for i in range(621, len(test_set)): #len(test_set)
+    for i in range(len(test_set)): #len(test_set)
         sample, answer = affordances.run(test_set[i])
         scores = sample['options']
-        print('scores', scores)
+        #print('scores', scores)
         llm_answers = []
         for key, option in scores.items():
-            print(key, option)
+            #print(key, option)
             if key in answer:
                 llm_answers.append(option)
                 #llm_answers[key] = option
@@ -292,17 +288,17 @@ if __name__ == "__main__":
         if i%10 == 0:
            agg_metrics = aggreate(metrics_batch)
            agg_metrics_df = pd.DataFrame(agg_metrics)
-           agg_metrics_df.to_csv(f"{exp_res_dir}/affordances_agg_metrics_EQ_{i}.csv")        
+           agg_metrics_df.to_csv(f"affordances_{exp_res_dir}/affordances_agg_metrics_{i}.csv")        
            metrics = pd.DataFrame(metrics_batch)
-           metrics.to_csv(f"{exp_res_dir}/affordances_metrics_EQ_{i}.csv")
+           metrics.to_csv(f"affordances_{exp_res_dir}/affordances_metrics_{i}.csv")
 
     metrics = pd.DataFrame(metrics_batch)
-    metrics.to_csv(f"{exp_res_dir}/affordances_metrics_EQ_{i}.csv")
+    metrics.to_csv(f"affordances_{exp_res_dir}/affordances_metrics_{i}.csv")
 
 
     metrics, amb_dif = ambiguity_differentiation(metrics)
-    print(amb_dif)
+    print('AmbDif: ',amb_dif)
     with open(f"{exp_res_dir}/affordances_ambdif_{i}.txt", 'a') as file:
         file.write(str(amb_dif))
 
-    metrics.to_csv(f"{exp_res_dir}/affordances_metrics_{i}.csv", 'a')
+    metrics.to_csv(f"{exp_res_dir}/affordances_metrics_{i}.csv")
