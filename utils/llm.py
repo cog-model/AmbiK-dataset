@@ -14,15 +14,15 @@ class timeout:
         self.seconds = seconds
         self.error_message = error_message
 
-    def handle_timeout(self, signum, frame):
-        raise TimeoutError(self.error_message)
+    def handle_timeout(self):
+        raise TimeoutException(self.error_message)
 
     def __enter__(self):
-        signal.signal(signal.SIGALRM, self.handle_timeout)
-        signal.alarm(self.seconds)
+        self.timer = threading.Timer(self.seconds, self.handle_timeout)
+        self.timer.start()
 
-    def __exit__(self, type, value, traceback):
-        signal.alarm(0)
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.timer.cancel()
 
 def temperature_scaling(logits, temperature=1):
     logits = np.array(logits)
@@ -35,23 +35,9 @@ def temperature_scaling(logits, temperature=1):
         logits = logits
     logits = logits - np.log(np.sum(np.exp(logits)))
     smx = np.exp(logits)
+    smx = [float(x) for x in smx]
     return smx
 
-class timeout:
-    def __init__(self, seconds=1, error_message='Timeout'):
-        self.seconds = seconds
-        self.error_message = error_message
-
-    def handle_timeout(self, signum, frame):
-        raise TimeoutError(self.error_message)
-
-    def __enter__(self):
-        signal.signal(signal.SIGALRM, self.handle_timeout)
-        signal.alarm(self.seconds)
-
-    def __exit__(self, type, value, traceback):
-        signal.alarm(0)
-    
 class LLM:
     def __init__(self, model_name, generation_settings):
         self.device = "cuda" #torch.device("cuda" if torch.cuda.is_available() else "cpu")
