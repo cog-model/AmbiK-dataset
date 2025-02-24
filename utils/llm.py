@@ -5,8 +5,12 @@ import torch
 import openai
 from openai import OpenAI
 import signal
+import threading
 
-openai_api_key = #"your-api-key"
+class TimeoutException(Exception):
+    pass
+
+#openai_api_key = "your-api-key"
 openai.api_key = openai_api_key
 
 class timeout:
