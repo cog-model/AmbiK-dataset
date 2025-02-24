@@ -1,12 +1,8 @@
 import os
 import gc
 import sys
-import glob
-import random
 import numpy as np
 import pandas as pd
-import re
-import spacy
 import re
 import tqdm
 
@@ -115,7 +111,7 @@ if __name__ == "__main__":
     unc_model = configs['uncertainty_detection']['model']
     if "/" in unc_model:
         answ_model = unc_model.split("/")[1]
-    exp_res_dir = f"./{gen_model}_{unc_model}"
+    exp_res_dir = f"./binary_{gen_model}_{unc_model}"
     os.makedirs(exp_res_dir, exist_ok=True)
 
     print()
