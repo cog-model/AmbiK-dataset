@@ -1,6 +1,11 @@
 import numpy as np
 import pandas as pd
 
+def safe_mean(arr):
+    if len(arr) == 0:
+        return -1  # or any other value you deem appropriate
+    return np.mean(arr)
+
 def batch_metric_calculation(llm_answers_batch, scores, y_amb_type_batch, y_amb_intents_batch, y_amb_shortlist_batch):
     metrics_batch = {'llm_answers':[], 'scores':[], 'y_amb_type':[], 'y_amb_intents':[], 'y_amb_shortlist':[],
                      'SR':[], 'help_rate': [], 'correct_help_rate': [], 'SSC': []}
@@ -79,10 +84,10 @@ def aggreate(metrics_batch):
     
     for ambiguity_type in ambiguity_types:
         sr_rates = np.asarray(metrics_df.loc[metrics_df['y_amb_type'] == ambiguity_type]['SR'])
-        sr = np.mean(sr_rates[sr_rates>=0])
+        sr = safe_mean(sr_rates[sr_rates>=0])
 
         amb_det_rates = np.asarray(metrics_df.loc[metrics_df['y_amb_type'] == ambiguity_type]['correct_help_rate'])
-        amb_detection = np.mean(amb_det_rates[amb_det_rates>=0])
+        amb_detection = safe_mean(amb_det_rates[amb_det_rates>=0])
 
         help_rates = np.asarray(metrics_df.loc[metrics_df['y_amb_type'] == ambiguity_type]['help_rate'])
         if len(help_rates) != 0:
@@ -91,7 +96,7 @@ def aggreate(metrics_batch):
             help_rate = -1
 
         ssc_rates = np.asarray(metrics_df.loc[metrics_df['y_amb_type'] == ambiguity_type]['SSC'])
-        ssc = np.mean(ssc_rates[ssc_rates>=0])
+        ssc = safe_mean(ssc_rates[ssc_rates>=0])
 
         metrics_li.append({'ambiguity_type': ambiguity_type, 'sr_agg': sr, 'amb_detection_agg': amb_detection, 'help_rate_agg': help_rate, 'ssc_agg': ssc})
     return metrics_li
@@ -104,10 +109,10 @@ def binary_aggreate(metrics_batch):
     
     for ambiguity_type in ambiguity_types:
         sr_rates = np.asarray(metrics_df.loc[metrics_df['y_amb_type'] == ambiguity_type]['SR'])
-        sr = np.mean(sr_rates[sr_rates>=0])
+        sr = safe_mean(sr_rates[sr_rates>=0])
 
         amb_det_rates = np.asarray(metrics_df.loc[metrics_df['y_amb_type'] == ambiguity_type]['correct_help_rate'])
-        amb_detection = np.mean(amb_det_rates[amb_det_rates>=0])
+        amb_detection = safe_mean(amb_det_rates[amb_det_rates>=0])
 
         help_rates = np.asarray(metrics_df.loc[metrics_df['y_amb_type'] == ambiguity_type]['help_rate'])
         if len(help_rates) != 0:
@@ -126,10 +131,10 @@ def nohelp_aggreate(metrics_batch):
     
     for ambiguity_type in ambiguity_types:
         sr_rates = np.asarray(metrics_df.loc[metrics_df['y_amb_type'] == ambiguity_type]['SR'])
-        sr = np.mean(sr_rates[sr_rates>=0])
+        sr = safe_mean(sr_rates[sr_rates>=0])
 
         amb_det_rates = np.asarray(metrics_df.loc[metrics_df['y_amb_type'] == ambiguity_type]['correct_help_rate'])
-        amb_detection = np.mean(amb_det_rates[amb_det_rates>=0])
+        amb_detection = safe_mean(amb_det_rates[amb_det_rates>=0])
 
         help_rates = np.asarray(metrics_df.loc[metrics_df['y_amb_type'] == ambiguity_type]['help_rate'])
         if len(help_rates) != 0:
