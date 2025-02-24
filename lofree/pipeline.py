@@ -10,7 +10,6 @@ import pandas as pd
 import random
 import os
 import re
-import spacy
 
 #print(glob.glob("*"))
 sys.path.append(".")
@@ -61,8 +60,8 @@ def format_examples(examples):
 class LoFreePipe():
     def __init__(self, config=None):
         self.config = config
-        self.prompting_number = 2 #за раз енерируется 4 варианта, prompting_number = количество желаемых вариантов (20)/4
-        self.lambda1 = 0.1
+        self.prompting_number = 4 #за раз енерируется 4 варианта, prompting_number = количество желаемых вариантов (20)/4
+        self.lambda1 = 0.1 #гиперпараметры, см. аппендикс в статье
         self.lambda2 = 0.1
         self.cp = 1.093328028091499 #поменять на свое значение СР, посчитанное запуском calibration.py
         self.mapping_1 = ['A', 'B', 'C', 'D']
@@ -189,7 +188,7 @@ if __name__ == "__main__":
     gen_model = configs['examples_generation']['model']
     if "/" in gen_model:
         gen_model = gen_model.split("/")[1]
-    exp_res_dir = f"./{gen_model}_"
+    exp_res_dir = f"./lofree_{gen_model}"
     os.makedirs(exp_res_dir, exist_ok=True)
 
     print()
@@ -242,7 +241,7 @@ if __name__ == "__main__":
             'action': action})
         
     
-    for i in range(701, len(test_set)): #len(test_set)
+    for i in range(len(test_set)): #len(test_set)
         sample, llm_answers = lofree.run(test_set[i])
                 
         if isinstance(amb_shortlist[i], str):

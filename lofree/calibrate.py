@@ -1,13 +1,10 @@
 import gc
 import sys
-import glob
-import math
 from scipy import spatial
 from gensim.models import FastText
 from gensim.test.utils import common_texts
 import numpy as np
 import pandas as pd
-import re
 
 #print(glob.glob("*"))
 sys.path.append(".")
@@ -92,7 +89,7 @@ def calibtation():
     #Calibration set
     dataset = pd.read_csv("./ambik_dataset/ambik_calib_100.csv")
     
-    calib_data = pd.DataFrame(columns=['id', 'task', 'all variants', 'right variants'])
+    #calib_data = pd.DataFrame(columns=['id', 'task', 'all variants', 'right variants'])
 
     calibration_data = []
     for i in range(len(dataset)): #len(dataset)
@@ -132,14 +129,14 @@ def calibtation():
                'right variants': ", ".join(variants),
                'filtered variants': ", ".join(filtered_options.keys()), 
                'success_logits': filtered_options}
-        calib_data = pd.concat([calib_data, pd.DataFrame([row])], ignore_index=True)
+        #calib_data = pd.concat([calib_data, pd.DataFrame([row])], ignore_index=True)
         
         calibration_data+=filtered_options.values()
 
     gen_model = configs['examples_generation']['model']
     if "/" in gen_model:
         gen_model = gen_model.split("/")[1]
-    calib_data.to_csv('calib_data/LofreeCP_' + gen_model  +'.csv')
+    #calib_data.to_csv('calib_data/LofreeCP_' + gen_model  +'.csv')
 
     num_calibration_data = len(calibration_data)
     q_level = np.ceil((num_calibration_data + 1) * (1 - epsilon)) / num_calibration_data
