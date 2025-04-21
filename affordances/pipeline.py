@@ -5,6 +5,7 @@ import pandas as pd
 import os
 import re
 
+
 #print(glob.glob("*"))
 sys.path.append(".")
 sys.path.append("./utils")
@@ -15,7 +16,7 @@ from metrics import _calculate_metrics, aggreate, ambiguity_differentiation
 from affordances.prompts import examples_generation, affordance_generation, answer_generation
 from affordances.environment_objects import environment_objects
 
-CP = 2.718281828459045
+CP = 2.718
 
 class AffordancesConfig():
     def __init__(self, config):
@@ -80,7 +81,7 @@ class AffordancesPipe():
         generated_text = generated_text.split('\n')[0]
 
         if generated_text == 'True' or generated_text == 'Yes':
-            return llm.filter_logits(logits[-1][0], words=[generated_text])[generated_text] # первая буква ответа?
+            return llm.filter_logits(logits[-1][0], words=[generated_text])[generated_text]
         elif generated_text== 'False' or generated_text== 'No':
             return llm.filter_logits(logits[-1][0], words=[generated_text])[generated_text]
         return generated_text + 'IS NOT TRUE OR FALSE'
@@ -125,7 +126,7 @@ class AffordancesPipe():
                 formated_options.append(option_formated)
         return possible_options
 
-    def generate_answer(self, sample):  #для выбора логов
+    def generate_answer(self, sample):
         llm = LLM(self.config.answering['model'],
                   self.config.answering['generation_kwargs'])
         
@@ -146,7 +147,7 @@ class AffordancesPipe():
         affordance_scores = {}
         li = ['A', 'B', 'C', 'D']
         for j in range(len(li)):
-            option = sample['options'][li[j]][0] #sample['options'] это словарь {'A': [], 'B': [], 'C': [], 'D': []}
+            option = sample['options'][li[j]][0] #sample['options'] = {'A': [], 'B': [], 'C': [], 'D': []}
             affordance_prompt = self.affordance_prompt.replace('<DESCRIPTION>', description)
             affordance_prompt = self.affordance_prompt.replace('<TASK>', task)
             promt_score = self.prompt_based_affordance(affordance_prompt)
@@ -164,9 +165,7 @@ class AffordancesPipe():
                 affordance_score = float(promt_score * context_score * np.exp(sample['logits'][li[j]]))
             else:
                 affordance_score = 0
-            #('promt_score', promt_score)
-            #print('context_score', context_score)
-            #print('affordance_score!!!!', affordance_score)
+
             affordance_scores[li[j]] = affordance_score
 
         return (context_scores, promt_scores, affordance_scores)
@@ -190,18 +189,13 @@ class AffordancesPipe():
         context_scores, promt_scores, affordance_scores = self.generate_affordances(sample)
                                                                                     #, description, task, environment_objects)
         sample['affordance_scores'] = affordance_scores
-        #print('affordance_scores', affordance_scores)
-        
-        #filtered_logits = llm.filter_logits(logits[-1][0], words=["A", "B", "C", "D", 'a', 'b', 'c', 'd', '1', '2', '3', '4'])
-        #llm = None
+
         return sample, self.answer_with_cp(sample)
 
     def run(self, sample): 
         sample = affordances.predict_examples(sample) 
         gc.collect()
         sample, cp_ans = affordances.generate_answer(sample)
-        #print(sample)
-        #print(cp_ans)
         
         if len(cp_ans)==0:
             return sample, []
@@ -226,8 +220,8 @@ if __name__ == "__main__":
     affordances = AffordancesPipe(affordances_config)
     
     #Test set: choose any subpart of AmbiK for test. We take 500-72 examples
-    dataset = pd.read_csv("./ambik_dataset/ambik_test_400.csv") #ambik_test_400.csv #ambik_test_for_testing.csv
-    amb = dataset[['id', 'environment_short', 'environment_full',  'ambiguity_type', 'amb_shortlist', 'ambiguous_task', 'question', 'answer', 'plan_for_amb_task', 'end_of_ambiguity', 'user_intent']]
+    dataset = pd.read_csv("./ambik_dataset/ambik_test_900.csv") #ambik_test_400.csv #ambik_test_for_testing.csv
+    amb = dataset[['environment_short', 'environment_full',  'ambiguity_type', 'amb_shortlist', 'ambiguous_task', 'question', 'answer', 'plan_for_amb_task', 'end_of_ambiguity', 'user_intent']]
     dataset.ambiguity_type = ['unambiguous_direct']*len(dataset)
     dataset = pd.concat([dataset, amb])
     dataset['plan'] = dataset['plan_for_clear_task']
@@ -249,7 +243,7 @@ if __name__ == "__main__":
                                   
     test_set = []
     
-    for i in range(len(dataset)): #len(dataset)
+    for i in range(720, len(dataset)): #len(dataset)
         plan = dataset.loc[i, 'plan'].split('\n')
         point = dataset.loc[i, 'end_of_ambiguity']
         action = plan[point]
@@ -270,13 +264,10 @@ if __name__ == "__main__":
     for i in range(len(test_set)): #len(test_set)
         sample, answer = affordances.run(test_set[i])
         scores = sample['options']
-        #print('scores', scores)
         llm_answers = []
         for key, option in scores.items():
-            #print(key, option)
             if key in answer:
                 llm_answers.append(option)
-                #llm_answers[key] = option
 
         if isinstance(amb_shortlist[i], str):
             sample_keywords = amb_shortlist[i].split(",")
@@ -288,12 +279,12 @@ if __name__ == "__main__":
         if i%10 == 0:
            agg_metrics = aggreate(metrics_batch)
            agg_metrics_df = pd.DataFrame(agg_metrics)
-           agg_metrics_df.to_csv(f"affordances_{exp_res_dir}/affordances_agg_metrics_{i}.csv")        
+           agg_metrics_df.to_csv(f"{exp_res_dir}/affordances_agg_metrics_{i}.csv")        
            metrics = pd.DataFrame(metrics_batch)
-           metrics.to_csv(f"affordances_{exp_res_dir}/affordances_metrics_{i}.csv")
+           metrics.to_csv(f"{exp_res_dir}/affordances_metrics_{i}.csv")
 
     metrics = pd.DataFrame(metrics_batch)
-    metrics.to_csv(f"affordances_{exp_res_dir}/affordances_metrics_{i}.csv")
+    metrics.to_csv(f"{exp_res_dir}/affordances_metrics_{i}.csv")
 
 
     metrics, amb_dif = ambiguity_differentiation(metrics)
