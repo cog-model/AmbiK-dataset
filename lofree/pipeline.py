@@ -20,8 +20,6 @@ from metrics import _calculate_metrics, aggreate, ambiguity_differentiation
 
 from lofree.prompts import examples_generation
 
-#генерируем 20 вариантов, считаем для уникальных среди них метрики
-
 class LoFreeConfig():
     def __init__(self, config):
         config_mapping = {
@@ -46,7 +44,7 @@ def format_examples(examples):
         for key in variants.keys():    
             if line.startswith(f"{key})") or line.startswith(f"{mapping[key]}.") or line.startswith(f"{mapping[key]})"):
                 variants[key].append(line)
-    print(variants)
+
     for key in variants.keys():
         variants[key] = list(set(variants[key]))
         if len(variants[key]) > 0:
@@ -60,10 +58,10 @@ def format_examples(examples):
 class LoFreePipe():
     def __init__(self, config=None):
         self.config = config
-        self.prompting_number = 4 #за раз енерируется 4 варианта, prompting_number = количество желаемых вариантов (20)/4
-        self.lambda1 = 0.1 #гиперпараметры, см. аппендикс в статье
+        self.prompting_number = 2
+        self.lambda1 = 0.1
         self.lambda2 = 0.1
-        self.cp = 1.093328028091499 #поменять на свое значение СР, посчитанное запуском calibration.py
+        self.cp = 1.093328028091499
         self.mapping_1 = ['A', 'B', 'C', 'D']
         self.model_ss = FastText(sentences=common_texts, vector_size=200, window=5, min_count=1, workers=4)
         self.model_ss.save("ft.model")
@@ -120,7 +118,6 @@ class LoFreePipe():
         llm = None
         sample['options'] = answers.keys()
         sample['answers'] = answers
-        print("sample['answers']", sample['answers'])
         self.unique_options = len(answers)
         
         return sample, answers
@@ -173,8 +170,7 @@ class LoFreePipe():
 
         nonconformities = {}
 
-        #self.lambda1 и self.lambda2 -- гиперпараметры, подбираются отдельно
-
+        #self.lambda1 и self.lambda2 are hyperparameters
         for option, freq in frequences.items():
             nonconformities[option] = 1 - freq + self.lambda1 * normalized_entropy - self.lambda2 * similarities[option]
 
@@ -199,8 +195,8 @@ if __name__ == "__main__":
     lofree_config = LoFreeConfig(configs)
     lofree = LoFreePipe(lofree_config)
 
-    dataset = pd.read_csv("./ambik_dataset/ambik_test_400.csv") #ambik_test_400.csv #ambik_test_for_testing.csv
-    amb = dataset[['id', 'environment_short', 'environment_full',  'ambiguity_type', 'amb_shortlist', 'ambiguous_task', 'question', 'answer', 'plan_for_amb_task', 'end_of_ambiguity', 'user_intent']]
+    dataset = pd.read_csv("./ambik_dataset/ambik_test_900.csv") #ambik_test_400.csv #ambik_test_for_testing.csv
+    amb = dataset[['environment_short', 'environment_full',  'ambiguity_type', 'amb_shortlist', 'ambiguous_task', 'question', 'answer', 'plan_for_amb_task', 'end_of_ambiguity', 'user_intent']]
     dataset.ambiguity_type = ['unambiguous_direct']*len(dataset)
     dataset = pd.concat([dataset, amb])
     dataset['plan'] = dataset['plan_for_clear_task']
@@ -241,7 +237,7 @@ if __name__ == "__main__":
             'action': action})
         
     
-    for i in range(len(test_set)): #len(test_set)
+    for i in range(len(test_set)):
         sample, llm_answers = lofree.run(test_set[i])
                 
         if isinstance(amb_shortlist[i], str):
