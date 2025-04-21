@@ -7,17 +7,23 @@ import numpy as np
 import pandas as pd
 import re
 import tqdm
+import csv
 
-#print(glob.glob("*"))
+import torch
+torch.cuda.is_available()
+
+#knowno gpt3.5 склейка 800
+
+print(glob.glob("*"))
 sys.path.append(".")
 sys.path.append("./utils")
-from llm import LLM
+from utils.llm import LLM
 from parse_config import parse_args, parse_config
 from metrics import _calculate_metrics, aggreate, batch_metric_calculation, ambiguity_differentiation
 
 from knowno.prompts import examples_generation, question_generation, answer_generation
 
-CP = 0.9999999921913988
+CP = 0.9999976
 #0.26287592743744476 #SET YOUR CP VALUE DEFINED THROUGH RUNNING calibration.py SCRIPT
 
 class KnowNoConfig():
@@ -79,10 +85,9 @@ class KnowNoPipe():
         options, options_str = format_examples(examples)
         return options
         
-    def predict_examples(self,  description, task, prefix, action):
+    def predict_examples(self, prompt):
         llm = LLM(self.config.examples_generation['model'],
                   self.config.examples_generation['generation_kwargs'])
-        prompt = self.options_prompt(description, task, prefix, action)
         options = llm.generate(prompt)
         llm = None
         
@@ -110,7 +115,7 @@ class KnowNoPipe():
         for key in tokens_logits.keys():
             if tokens_logits[key] > self.cp:
                 possible_options.append(key) 
-      #  print(possible_options)
+
         formated_options = []
         for option in possible_options:
             if option.isdigit():  
@@ -159,43 +164,67 @@ class KnowNoPipe():
         gc.collect()
         return filtered_logits_batch, answers
         
-    def generate_answer(self, prompt, description, task, prefix, action): #choosing CP set for single example
+    def generate_answer(self, prompt): #choosing CP set for single example
         llm = LLM(self.config.answering['model'],
                   self.config.answering['generation_kwargs'])
         
-        prompt = self.answer_prompt(prompt, description, task, prefix, action)
         text, logits = llm.generate(prompt, return_logits=True)
         filtered_logits = llm.filter_logits(logits[-1][0], words=["A", "B", "C", "D", 'a', 'b', 'c', 'd', '1', '2', '3', '4'])
         llm = None
         return filtered_logits, self.answer_with_cp(filtered_logits)
 
-    def run(self, description, task, prefix, action):
+    def run(self, option_prompt, task_for_ans):
+
+        mapdi ={'1':'A', '2':'B', '3':'C', '4':'D'}
+    
         #generating multiple iptions
-        options, task = self.predict_examples(description, task, prefix, action) 
+        option = self.predict_examples(option_prompt) 
         #getting logits of options and choosing the options with logits greater than CP value. constricting a CP set.
-        answers_letter = self.generate_answer(task, task_di)[1]
-        answers = [options[letter] for letter in answers_letter]
-          
-        if len(answers)==0:
-            return [] #if no options are left in the set, it is impossible to answer
-        return answers #else there 1 or many answers
+
+        answer_prompt = self.answer_prompt(option, task_for_ans['description'], task_for_ans['task'], task_for_ans['prefix'], task_for_ans['action'])
+
+        logits, answers = self.generate_answer(answer_prompt)
+
+        
+        answers_ = []
+        if len(answers) > 0:
+            for letter in answers:
+                if letter in option.keys():
+                    answers_.append(option[letter])
+                elif mapdi[letter] in option.keys():
+                    answers_.append(option[mapdi[letter]])
+                else:
+                    pass
+           #if no options are left in the set, it is impossible to answer
+        return option, answers_ #else there 1 or many answers
 
     def run_batch(self, option_prompts, tasks_for_ans): #run, but for batch
         options = self.predict_examples_batch(option_prompts)
+        
         answer_prompts = []
         for i in range(len(options)):
             answer_prompts.append(self.answer_prompt(options[i], tasks_for_ans[i]['description'], tasks_for_ans[i]['task'], tasks_for_ans[i]['prefix'], tasks_for_ans[i]['action']))
         logits, answers = self.generate_answer_batch(answer_prompts)
         right_answers = []
+        mapdi ={'1':'A', '2':'B', '3':'C', '4':'D'}
     
         for i in range(len(answers)):
             option = options[i]
             answers_letter = answers[i]
             if len(answers_letter) > 0:
-                answers_ = [option[letter] for letter in answers_letter]
+                answers_ = []
+                for letter in answers_letter:
+                    if letter in option.keys():
+                        answers_.append(option[letter])
+                    elif mapdi[letter] in option.keys():
+                        answers_.append(option[mapdi[letter]])
+                    else:
+                        pass
             else: 
                 answers_ = []
             right_answers.append(answers_)
+
+        
         return options, right_answers
 
 if __name__ == "__main__":
@@ -216,8 +245,8 @@ if __name__ == "__main__":
     knowno_config = KnowNoConfig(configs)
     knowno = KnowNoPipe(knowno_config)
 
-    dataset = pd.read_csv("./ambik_dataset/ambik_test_400.csv") #ambik_test_400.csv #ambik_test_for_testing.csv
-    amb = dataset[['id', 'environment_short', 'environment_full',  'ambiguity_type', 'amb_shortlist', 'ambiguous_task', 'question', 'answer', 'plan_for_amb_task', 'end_of_ambiguity', 'user_intent']]
+    dataset = pd.read_csv("./ambik_dataset/ambik_test_900.csv")
+    amb = dataset[['environment_short', 'environment_full',  'ambiguity_type', 'amb_shortlist', 'ambiguous_task', 'question', 'answer', 'plan_for_amb_task', 'end_of_ambiguity', 'user_intent']]
     dataset.ambiguity_type = ['unambiguous_direct']*len(dataset)
     dataset = pd.concat([dataset, amb])
     dataset['plan'] = dataset['plan_for_clear_task']
@@ -238,7 +267,7 @@ if __name__ == "__main__":
     option_prompts = []
                                   
     tasks_for_ans = []
-    for i in range(3): #len(dataset) 
+    for i in range(1651, len(dataset)): #len(dataset) 
         description = dataset.loc[i, 'environment_full']
         task = dataset.loc[i, 'task']
         plan = dataset.loc[i, 'plan'].split('\n')
@@ -255,21 +284,31 @@ if __name__ == "__main__":
         tasks_for_ans.append({'description':description, 'task':task, 'prefix':prefix, 'action':action})
         option_prompt = knowno.options_prompt(description, task, prefix, action)
         option_prompts.append(option_prompt)
-    
-    options, right_answers = knowno.run_batch(option_prompts, tasks_for_ans)
-    batch_size = 2
+
+    options = []
+    right_answers = []
+    for i in range(len(option_prompts)):
+        option, right_answer = knowno.run(option_prompts[i], tasks_for_ans[i])
+        options.append(option)
+        right_answers.append(right_answer)
+
+        if i % 50 == 0:
+            metrics_batch = batch_metric_calculation(llm_answers_batch=right_answers, scores=options, y_amb_type_batch=amb_type, y_amb_intents_batch=intents, y_amb_shortlist_batch = amb_shortlist)
+            agg_metrics = aggreate(metrics_batch)
+            agg_metrics_df = pd.DataFrame(agg_metrics)
+            agg_metrics_df.to_csv(f"{exp_res_dir}/knowno_agg_metrics_{i}.csv")
+            metrics = pd.DataFrame(metrics_batch)
+            metrics.to_csv(f"{exp_res_dir}/knowno_metrics_{i}.csv")
+            
+
     metrics_batch = batch_metric_calculation(llm_answers_batch=right_answers, scores=options, y_amb_type_batch=amb_type, y_amb_intents_batch=intents, y_amb_shortlist_batch = amb_shortlist)
     
     agg_metrics = aggreate(metrics_batch)
-    #agg_metrics = {key:[agg_metrics[key]] for key in agg_metrics}
     agg_metrics_df = pd.DataFrame(agg_metrics)
-
-    agg_metrics_df.to_csv(f"{exp_res_dir}/knowno_agg_metrics_{i}.csv") #поправить записььь
+    agg_metrics_df.to_csv(f"{exp_res_dir}/knowno_agg_metrics_{i}.csv")
 
     metrics = pd.DataFrame(metrics_batch)
-
     metrics.to_csv(f"{exp_res_dir}/knowno_metrics_{i}.csv")
-
     metrics, amb_dif = ambiguity_differentiation(metrics)
     print(amb_dif)
     with open (f"{exp_res_dir}/knowno_ambdif_{i}.txt", 'a') as file:
