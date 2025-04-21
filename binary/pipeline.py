@@ -9,7 +9,7 @@ import tqdm
 #print(glob.glob("*"))
 sys.path.append(".")
 sys.path.append("./utils")
-from llm import LLM
+from utils.llm import LLM
 from parse_config import parse_args, parse_config
 from metrics import ambiguity_differentiation, batch_binary_metric_calculation, binary_aggreate
 
@@ -98,7 +98,7 @@ class BinaryPipe():
         unc_prompts = []
         for i in range(len(options)):
             unc_prompts.append(self.unc_prompt(options[i][0], tasks_for_ans[i]['description'], tasks_for_ans[i]['task'], tasks_for_ans[i]['prefix'], tasks_for_ans[i]['action']))
-        answers = self.generate_uncertainty_batch(unc_prompts) #здесь внутри сертайн/ансертайн
+        answers = self.generate_uncertainty_batch(unc_prompts)
 
         return options, answers
 
@@ -120,8 +120,8 @@ if __name__ == "__main__":
     binary_config = BinaryConfig(configs)
     binary = BinaryPipe(binary_config)
 
-    dataset = pd.read_csv("./ambik_dataset/ambik_test_400.csv") #ambik_test_400.csv #ambik_test_for_testing.csv
-    amb = dataset[['id', 'environment_short', 'environment_full',  'ambiguity_type', 'amb_shortlist', 'ambiguous_task', 'question', 'answer', 'plan_for_amb_task', 'end_of_ambiguity', 'user_intent']]
+    dataset = pd.read_csv("./ambik_dataset/ambik_test_900.csv") #ambik_test_400.csv #ambik_test_for_testing.csv
+    amb = dataset[['environment_short', 'environment_full',  'ambiguity_type', 'amb_shortlist', 'ambiguous_task', 'question', 'answer', 'plan_for_amb_task', 'end_of_ambiguity', 'user_intent']]
     dataset.ambiguity_type = ['unambiguous_direct']*len(dataset)
     dataset = pd.concat([dataset, amb])
     dataset['plan'] = dataset['plan_for_clear_task']
@@ -168,7 +168,7 @@ if __name__ == "__main__":
     #agg_metrics = {key:[agg_metrics[key]] for key in agg_metrics}
     agg_metrics_df = pd.DataFrame(agg_metrics)
 
-    agg_metrics_df.to_csv(f"{exp_res_dir}/binary_agg_metrics_{i}.csv") #поправить записььь
+    agg_metrics_df.to_csv(f"{exp_res_dir}/binary_agg_metrics_{i}.csv")
 
     metrics = pd.DataFrame(metrics_batch)
     metrics.to_csv(f"{exp_res_dir}/binary_metrics_{i}.csv")
@@ -178,5 +178,3 @@ if __name__ == "__main__":
     print(amb_dif)
     with open (f"{exp_res_dir}/binary_ambdif_{i}.txt", 'a') as file:
         file.write(str(amb_dif))
-
-    #переписать хелп рейт, мб вообще отдельную функцию для метрик
